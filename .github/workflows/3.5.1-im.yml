@@ -1,0 +1,25 @@
+name: Build Satrun-v3.5.1 with IM and Publish Docker Hub
+
+on:
+  push:
+    branches: master
+
+jobs:
+  build-and-deploy-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and Push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./saturn-3.5.1-im.Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/386
+          push: true
+          tags: flyceek/saturn:3.5.1-im
