@@ -11,6 +11,9 @@ jobs:
   build-and-deploy-image:
     runs-on: ubuntu-latest
     steps:
+      - name: Get tag
+        id: get_tag
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Check out code
         uses: actions/checkout@v2        
       - name: Set up QEMU
@@ -25,8 +28,8 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v2
         with:
-          context: ./${{ github.ref }}
+          context: ./${{ steps.get_version.outputs.VERSION }}
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64,linux/386
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/saturn:${{ github.ref }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/saturn:${{ steps.get_version.outputs.VERSION }}
