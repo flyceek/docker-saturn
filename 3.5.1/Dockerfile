@@ -1,5 +1,5 @@
 FROM openjdk:8-jdk-alpine
-MAINTAINER flyceek@gmail.com
+LABEL maintainer="flyceek@gmail.com"
 
 COPY build.sh /build.sh
 
